@@ -141,6 +141,12 @@ plt.legend(title="Sex")
 plt.tight_layout()
 plt.show()
 
+print("\n--- survival per class ---")
+
+print(df.groupby("Pclass")["Survived"].agg(
+    ["count", "mean"]
+).assign(survival_percentage=lambda x: x["mean"] * 100))
+
 print("\n--- Passengers per age group and class ---")
 
 age_class_counts = df.pivot_table(
@@ -192,6 +198,9 @@ print(passenger_counts)
 print("\n--- Embarked distribution ---")
 print(df["Embarked"].value_counts())
 
+print("\n--- embarked per sex ---")
+print(df.groupby("Sex")["Embarked"].value_counts())
+
 print("\n--- embarked distribution per class ---")
 print(df.groupby("Pclass")["Embarked"].value_counts())
 
@@ -208,3 +217,53 @@ survival_by_embarked_class = df.pivot_table(
 ) * 100
 
 print(survival_by_embarked_class)
+
+print("\n--- SibSp distribution ---")
+print(df["SibSp"].value_counts().sort_index())
+
+print("\n--- Survival per SibSp ---")
+print(df.groupby("SibSp")["Survived"].agg(
+    ["count", "mean"]
+).assign(survival_percentage=lambda x: x["mean"] * 100))
+
+print("\n--- Survival per fare ---")
+fare_bins = range(0, 551, 25)
+fare_labels = [f"{start}-{start + 25}" for start in range(0, 526, 25)]
+
+df["FareGroup"] = pd.cut(
+    df["Fare"],
+    bins=fare_bins,
+    labels=fare_labels,
+    right=False,
+    include_lowest=True
+)
+
+print(df.groupby("FareGroup", observed=True)["Survived"].agg(
+    ["count", "mean"]
+).assign(survival_percentage=lambda x: x["mean"] * 100))
+
+print("\n--- survival per parch ---")
+print(df.groupby("Parch")["Survived"].agg(
+    ["count", "mean"]
+).assign(survival_percentage=lambda x: x["mean"] * 100))
+
+df["FamilySize"] = df["SibSp"] + df["Parch"] + 1
+
+print("\n--- Survival per FamilySize ---")
+print(df.groupby("FamilySize")["Survived"].agg(
+    ["count", "mean"]
+).assign(
+    survival_percentage=lambda x: x["mean"] * 100
+))
+
+df["FamilySizeGroup"] = pd.cut(
+    df["FamilySize"],
+    bins=[0, 1, 4, float("inf")],
+    labels=["Alone", "Small family", "Large family"]
+)
+
+print(df.groupby("FamilySizeGroup", observed=True)["Survived"].agg(
+    ["count", "mean"]
+).assign(
+    survival_percentage=lambda x: x["mean"] * 100
+))
