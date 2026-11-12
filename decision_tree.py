@@ -94,7 +94,8 @@ for depth in range(1, 11):
 
         mlflow.sklearn.log_model(
             model,
-            name="decision_tree_model"
+            name="decision_tree_model",
+            skops_trusted_types=["sklearn.tree._tree.Tree"]
         )
 
         print(f"\nTree depth: {depth}")
@@ -106,4 +107,4 @@ for depth in range(1, 11):
         print("\nConfusion matrix:")
         print(confusion_matrix(y_test, y_pred))
 
-print("\nAlle experimenten zijn afgerond!")
+print("\nAll experiments are completed!")
