@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("data/train.csv")
+df = pd.read_csv("data/train-original.csv")
 
 print(df.head())
 print(df.shape)
@@ -263,6 +263,15 @@ df["FamilySizeGroup"] = pd.cut(
 )
 
 print(df.groupby("FamilySizeGroup", observed=True)["Survived"].agg(
+    ["count", "mean"]
+).assign(
+    survival_percentage=lambda x: x["mean"] * 100
+))
+
+print("\n--- survival per cabin ---")
+df["CabinLetter"] = df["Cabin"].str[0]
+
+print(df.groupby("CabinLetter", observed=True)["Survived"].agg(
     ["count", "mean"]
 ).assign(
     survival_percentage=lambda x: x["mean"] * 100

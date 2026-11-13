@@ -1,13 +1,16 @@
+
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
 
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
@@ -107,4 +110,45 @@ for depth in range(1, 11):
         print("\nConfusion matrix:")
         print(confusion_matrix(y_test, y_pred))
 
+
 print("\nAll experiments are completed!")
+
+print("\nCreating visualization for tree depth 3...")
+
+best_model = Pipeline([
+    ("preprocessor", preprocessor),
+    ("classifier", DecisionTreeClassifier(
+        criterion="entropy",
+        max_depth=3,
+        random_state=42
+    ))
+])
+
+best_model.fit(X_train, y_train)
+
+tree_model = best_model.named_steps["classifier"]
+
+feature_names = (
+    best_model.named_steps["preprocessor"].get_feature_names_out()
+)
+
+plt.figure(figsize=(22, 12))
+
+plot_tree(
+    tree_model,
+    feature_names=feature_names,
+    class_names=["Not Survived", "Survived"],
+    filled=True,
+    rounded=True,
+    fontsize=10
+)
+
+plt.title("Titanic Decision Tree - Depth 3")
+
+plt.tight_layout()
+
+plt.savefig("decision_tree_depth_3.png", dpi=300, bbox_inches="tight")
+
+plt.show()
+
+print("\nVisualization saved as decision_tree_depth_3.png")

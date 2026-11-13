@@ -1,0 +1,24 @@
+artifact_path: file:C:/Users/Maikel/Plan2Play/titanic-exploration/mlruns/1/models/m-0d45dfb8ea4b4d6c8ed8375632735761/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.14.3
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.1
+    skops_trusted_types:
+    - sklearn.tree._tree.Tree
+mlflow_version: 3.18.0
+model_id: m-0d45dfb8ea4b4d6c8ed8375632735761
+model_size_bytes: 105070
+model_uuid: m-0d45dfb8ea4b4d6c8ed8375632735761
+prompts: null
+run_id: 542dc341c3ea4539925670fb613e60cf
+utc_time_created: '2026-11-12 13:44:38.461986'
